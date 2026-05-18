@@ -6,7 +6,7 @@ from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from facebook_api import FacebookAPIError, publish_comment, publish_page_post
+from facebook_api import FacebookAPIError, is_facebook_share_url, publish_comment, publish_page_post, share_url_error
 from facebook_config import (
     clear_facebook_config,
     has_facebook_config,
@@ -32,23 +32,23 @@ tasks_lock = Lock()
 
 
 class SaveCredentialsRequest(BaseModel):
-    page_id: str | None = None
-    page_access_token: str | None = None
-    app_secret: str | None = None
-    email: str | None = None
-    password: str | None = None
+    page_id: str | None = Field(default=None, max_length=64)
+    page_access_token: str | None = Field(default=None, max_length=4096)
+    app_secret: str | None = Field(default=None, max_length=256)
+    email: str | None = Field(default=None, max_length=64)
+    password: str | None = Field(default=None, max_length=4096)
 
 
 class DraftRequest(BaseModel):
-    task_id: str | None = None
-    message: str | None = None
-    action: str | None = None
-    target_url: str | None = None
-    content_brief: str | None = None
+    task_id: str | None = Field(default=None, max_length=80)
+    message: str | None = Field(default=None, max_length=1500)
+    action: str | None = Field(default=None, max_length=20)
+    target_url: str | None = Field(default=None, max_length=500)
+    content_brief: str | None = Field(default=None, max_length=1200)
 
 
 class PublishRequest(BaseModel):
-    text: str = Field(min_length=1)
+    text: str = Field(min_length=1, max_length=1000)
 
 
 @app.get("/health")
@@ -75,6 +75,8 @@ def save_credentials(payload: SaveCredentialsRequest) -> dict:
 
     if not page_id or not page_access_token:
         raise HTTPException(status_code=400, detail="Page ID and Page access token are required.")
+    if not page_id.isdigit():
+        raise HTTPException(status_code=400, detail="Page ID must contain only digits.")
 
     save_facebook_config(page_id, page_access_token, app_secret)
     return {"ok": True, "mode": "graph_api"}
@@ -207,6 +209,8 @@ def _resolve_intent(payload: DraftRequest) -> dict:
             raise ValueError("A content brief or message is required.")
         if action == "comment" and not (payload.target_url or "").strip():
             raise ValueError("A target Facebook post URL is required for comments.")
+        if action == "comment" and is_facebook_share_url(payload.target_url):
+            raise ValueError(share_url_error())
         return {
             "action": action,
             "content_brief": brief,
@@ -214,6 +218,8 @@ def _resolve_intent(payload: DraftRequest) -> dict:
         }
 
     intent = parse_intent(payload.message or "")
+    if intent.action == "comment" and is_facebook_share_url(intent.target_url):
+        raise ValueError(share_url_error())
     return {
         "action": intent.action,
         "content_brief": intent.content_brief,

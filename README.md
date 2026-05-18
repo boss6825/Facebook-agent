@@ -248,6 +248,24 @@ The backend manages:
 
 Important limitation: backend tasks are stored in an in-memory Python dictionary. Restarting the backend clears task state. The frontend may still show local task history, but old task IDs will no longer be available from `GET /task/{task_id}` after a backend restart.
 
+## Minimum Guardrails
+
+The backend includes lightweight guardrails to reduce accidental abuse and prompt-injection risk:
+
+- User briefs are treated as untrusted content inside the Claude prompt.
+- A system prompt tells Claude not to follow user text that tries to override system/developer instructions.
+- Obvious prompt-injection phrases are rejected before calling Claude.
+- Draft inputs have length limits:
+  - `message`: 1500 characters
+  - `content_brief`: 1200 characters
+  - `target_url`: 500 characters
+- Published text is limited to 1000 characters.
+- Facebook Page IDs must contain only digits.
+- Control characters are stripped before LLM generation and Graph API publishing.
+- Comment URLs are restricted to `facebook.com`, subdomains of `facebook.com`, `fb.watch`, or subdomains of `fb.watch`.
+
+These are minimum local-development guardrails, not a complete production security model. A production app should add proper user authentication, encrypted token storage, OAuth-based Facebook authorization, durable audit logs, rate limits, and stronger content policy checks.
+
 ## API Endpoints
 
 ### `GET /health`
@@ -507,7 +525,9 @@ For comments, the backend tries to resolve the target Graph object ID from:
 - URL path segments like `posts/{id}`, `videos/{id}`, `reel/{id}`, or `permalink/{id}`
 - `pfbid...` style path IDs
 
-If the backend cannot resolve an object ID, publishing fails with an error asking for a URL that contains `story_fbid`, `fbid`, or a raw Graph post ID.
+Facebook share URLs such as `/share/p/...` are rejected before draft generation because they hide the real Graph post ID and Meta does not reliably expose the underlying post to Page tokens. Use the post timestamp/permalink URL that contains `story_fbid`, `fbid`, or `/posts/{id}`, or paste the raw Graph post ID.
+
+If the backend cannot resolve an object ID, publishing fails with an error asking for a URL that contains `story_fbid`, `fbid`, a post permalink, or a raw Graph post ID.
 
 ## Example Commands
 

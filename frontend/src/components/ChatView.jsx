@@ -36,6 +36,16 @@ function normalizeFacebookUrl(raw) {
   }
 }
 
+function isFacebookShareUrl(raw) {
+  try {
+    const parsed = new URL(raw)
+    const parts = parsed.pathname.split('/').filter(Boolean)
+    return parts.length >= 2 && parts[0].toLowerCase() === 'share'
+  } catch {
+    return false
+  }
+}
+
 function ThinkingDots() {
   return (
     <div style={{ display: 'flex', gap: 4, padding: '4px 0' }}>
@@ -495,6 +505,12 @@ export default function ChatView({
       const normalizedUrl = normalizeFacebookUrl(commentUrl)
       if (!normalizedUrl) {
         setUrlError('Enter a valid Facebook post URL from facebook.com or fb.watch.')
+        return
+      }
+      if (isFacebookShareUrl(normalizedUrl)) {
+        setUrlError(
+          'Share links hide the post ID. Open the post and copy its timestamp/permalink URL, or paste the raw Graph post ID.',
+        )
         return
       }
 
