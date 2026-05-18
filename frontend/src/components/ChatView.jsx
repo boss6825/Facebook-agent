@@ -462,8 +462,9 @@ function WelcomeMessage({ onPickPrompt }) {
               padding: '12px 18px',
               borderRadius: 12,
               border: '1px solid var(--border)',
-              background: hoveredIdx === i ? 'var(--primary-light)' : '#fff',
-              fontSize: 13,
+              background: hoveredIdx === i ? 'var(--primary-light)' : 'var(--bg-elevated)',
+              fontSize: 13.5,
+              fontWeight: 600,
               color: hoveredIdx === i ? 'var(--primary-text)' : 'var(--text-secondary)',
               cursor: 'pointer',
               transition: 'all 200ms ease',
@@ -480,7 +481,7 @@ function WelcomeMessage({ onPickPrompt }) {
               opacity: 0.5,
               marginRight: 8,
               fontSize: 12,
-              fontWeight: 600,
+              fontWeight: 700,
               color: hoveredIdx === i ? 'var(--primary)' : 'var(--text-muted)',
             }}>
               {i + 1}.
