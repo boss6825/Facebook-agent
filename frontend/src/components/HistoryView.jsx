@@ -41,7 +41,10 @@ export default function HistoryView({ tasks }) {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.title}>History</h1>
+        <div>
+          <h1 style={styles.title}>History</h1>
+          <p style={styles.headerSub}>Browse past commands and their results</p>
+        </div>
       </div>
 
       <div style={styles.content}>
@@ -59,7 +62,7 @@ export default function HistoryView({ tasks }) {
               <span
                 style={{
                   ...styles.filterCount,
-                  background: filter === f.id ? 'rgba(255,255,255,0.25)' : 'var(--bg-muted)',
+                  background: filter === f.id ? 'rgba(255,255,255,0.2)' : 'var(--bg-muted)',
                   color: filter === f.id ? '#fff' : 'var(--text-muted)',
                 }}
               >
@@ -71,11 +74,27 @@ export default function HistoryView({ tasks }) {
 
         {filtered.length === 0 ? (
           <div style={styles.emptyState}>
-            <IconHistory size={28} />
-            <p style={{ margin: 0 }}>
+            <div style={{
+              width: 48,
+              height: 48,
+              borderRadius: 14,
+              background: 'var(--bg-muted)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-muted)',
+            }}>
+              <IconHistory size={22} />
+            </div>
+            <p style={{ margin: 0, fontWeight: 500 }}>
               {filter === 'all'
-                ? 'No commands yet. Start chatting to see history here.'
-                : `No ${filter === 'active' ? 'active' : filter} tasks.`}
+                ? 'No commands yet'
+                : `No ${filter === 'active' ? 'active' : filter} tasks`}
+            </p>
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>
+              {filter === 'all'
+                ? 'Start chatting to see history here.'
+                : 'Try a different filter.'}
             </p>
           </div>
         ) : (
@@ -102,9 +121,9 @@ export default function HistoryView({ tasks }) {
                 >
                   <div
                     style={{
-                      width: 36,
-                      height: 36,
-                      borderRadius: 10,
+                      width: 38,
+                      height: 38,
+                      borderRadius: 11,
                       background: sc.bg,
                       color: sc.color,
                       display: 'flex',
@@ -134,14 +153,14 @@ export default function HistoryView({ tasks }) {
                     {task.generated && task.status === 'done' && (
                       <div
                         style={{
-                          marginTop: 6,
-                          padding: '8px 10px',
+                          marginTop: 8,
+                          padding: '10px 12px',
                           background: 'var(--bg-alt)',
-                          borderLeft: '2px solid var(--primary)',
-                          borderRadius: 4,
+                          borderLeft: '3px solid var(--primary)',
+                          borderRadius: '0 8px 8px 0',
                           fontSize: 12,
                           color: 'var(--text-secondary)',
-                          lineHeight: 1.5,
+                          lineHeight: 1.6,
                           whiteSpace: 'pre-wrap',
                         }}
                       >
@@ -155,8 +174,8 @@ export default function HistoryView({ tasks }) {
                       fontWeight: 600,
                       color: sc.color,
                       background: sc.bg,
-                      padding: '4px 10px',
-                      borderRadius: 6,
+                      padding: '5px 12px',
+                      borderRadius: 8,
                       flexShrink: 0,
                       whiteSpace: 'nowrap',
                     }}
@@ -179,51 +198,61 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '18px 28px',
-    borderBottom: '1px solid var(--border)',
+    padding: '20px 32px',
+    borderBottom: '1px solid var(--border-subtle)',
     background: '#fff',
     flexShrink: 0,
   },
-  title: { fontSize: 18, fontWeight: 700, color: 'var(--text)' },
-  content: { flex: 1, overflowY: 'auto', padding: 28 },
-  filterBar: { display: 'flex', gap: 6, marginBottom: 20, flexWrap: 'wrap' },
+  title: { fontSize: 18, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.2px' },
+  headerSub: { fontSize: 12.5, color: 'var(--text-muted)', marginTop: 2, fontWeight: 400 },
+  content: { flex: 1, overflowY: 'auto', padding: 32 },
+  filterBar: {
+    display: 'flex',
+    gap: 6,
+    marginBottom: 20,
+    flexWrap: 'wrap',
+    background: 'var(--bg-muted)',
+    padding: 4,
+    borderRadius: 12,
+    width: 'fit-content',
+  },
   filterBtn: {
     display: 'flex',
     alignItems: 'center',
     gap: 6,
-    padding: '7px 14px',
-    borderRadius: 8,
-    border: '1px solid var(--border)',
-    background: '#fff',
+    padding: '8px 14px',
+    borderRadius: 9,
+    border: 'none',
+    background: 'transparent',
     fontSize: 13,
     fontWeight: 500,
     color: 'var(--text-secondary)',
     cursor: 'pointer',
-    transition: 'all 150ms',
+    transition: 'all 180ms ease',
   },
   filterBtnActive: {
     background: 'var(--primary)',
-    borderColor: 'var(--primary)',
     color: '#fff',
+    boxShadow: 'var(--shadow-primary)',
   },
   filterCount: {
     fontSize: 11,
     fontWeight: 600,
-    padding: '1px 6px',
-    borderRadius: 4,
-    minWidth: 18,
+    padding: '1px 7px',
+    borderRadius: 6,
+    minWidth: 20,
     textAlign: 'center',
   },
   emptyState: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 12,
-    padding: '48px 20px',
-    color: 'var(--text-muted)',
+    gap: 8,
+    padding: '52px 20px',
+    color: 'var(--text-secondary)',
     fontSize: 14,
-    background: 'var(--bg-alt)',
-    borderRadius: 14,
+    background: '#fff',
+    borderRadius: 16,
     border: '1px dashed var(--border)',
   },
   list: { display: 'flex', flexDirection: 'column', gap: 8 },
@@ -231,10 +260,12 @@ const styles = {
     display: 'flex',
     alignItems: 'flex-start',
     gap: 14,
-    padding: '16px 18px',
-    borderRadius: 12,
-    border: '1px solid var(--border)',
+    padding: '18px 20px',
+    borderRadius: 14,
+    border: '1px solid var(--border-subtle)',
     background: '#fff',
+    transition: 'all 200ms ease',
+    boxShadow: 'var(--shadow-xs)',
   },
   taskCmd: {
     fontSize: 14,
@@ -249,7 +280,7 @@ const styles = {
     fontSize: 12,
     color: 'var(--text-secondary)',
     marginTop: 6,
-    lineHeight: 1.5,
+    lineHeight: 1.6,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     display: '-webkit-box',

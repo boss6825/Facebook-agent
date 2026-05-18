@@ -18,10 +18,14 @@ export default function Sidebar({ currentPage, onNavigate, backendConnected, isS
         <div style={styles.logoCircle}>
           <IconZap size={18} />
         </div>
-        <span style={styles.brandText}>FB Agent</span>
+        <div style={styles.brandInfo}>
+          <span style={styles.brandText}>FB Agent</span>
+          <span style={styles.brandSub}>Social Autopilot</span>
+        </div>
       </div>
 
       <nav style={styles.nav}>
+        <div style={styles.navLabel}>MENU</div>
         {NAV_ITEMS.map((item) => {
           const isActive = currentPage === item.id
           const isHovered = hoveredItem === item.id
@@ -38,9 +42,16 @@ export default function Sidebar({ currentPage, onNavigate, backendConnected, isS
                 ...(isHovered && !isActive ? styles.navItemHover : {}),
               }}
             >
-              <div style={{ ...styles.activeIndicator, opacity: isActive ? 1 : 0 }} />
-              <Icon size={18} />
+              <div
+                style={{
+                  ...styles.navIconWrap,
+                  ...(isActive ? styles.navIconWrapActive : {}),
+                }}
+              >
+                <Icon size={16} />
+              </div>
               <span>{item.label}</span>
+              {isActive && <div style={styles.activeIndicator} />}
             </button>
           )
         })}
@@ -56,18 +67,26 @@ export default function Sidebar({ currentPage, onNavigate, backendConnected, isS
             ...(hoveredItem === 'settings' ? styles.navItemHover : {}),
           }}
         >
-          <div style={{ ...styles.activeIndicator, opacity: 0 }} />
-          <IconSettings size={18} />
+          <div style={styles.navIconWrap}>
+            <IconSettings size={16} />
+          </div>
           <span>Settings</span>
         </button>
 
         <div style={styles.statusBar}>
-          <div
-            style={{
-              ...styles.statusDot,
-              background: backendConnected ? (isSetup ? '#10B981' : '#F59E0B') : '#EF4444',
-            }}
-          />
+          <div style={styles.statusDotOuter}>
+            <div
+              style={{
+                ...styles.statusDot,
+                background: backendConnected ? (isSetup ? '#10B981' : '#F59E0B') : '#EF4444',
+                boxShadow: backendConnected
+                  ? isSetup
+                    ? '0 0 8px rgba(16, 185, 129, 0.4)'
+                    : '0 0 8px rgba(245, 158, 11, 0.4)'
+                  : '0 0 8px rgba(239, 68, 68, 0.4)',
+              }}
+            />
+          </div>
           <span style={styles.statusText}>
             {backendConnected ? (isSetup ? 'Connected' : 'Setup needed') : 'Backend offline'}
           </span>
@@ -82,8 +101,8 @@ const styles = {
     width: 'var(--sidebar-width)',
     minWidth: 'var(--sidebar-width)',
     height: '100%',
-    background: '#FAFBFD',
-    borderRight: '1px solid var(--border)',
+    background: '#FAFBFE',
+    borderRight: '1px solid var(--border-subtle)',
     display: 'flex',
     flexDirection: 'column',
     padding: 0,
@@ -92,46 +111,64 @@ const styles = {
   brand: {
     display: 'flex',
     alignItems: 'center',
-    gap: 10,
-    padding: '20px 20px 24px',
-    borderBottom: '1px solid var(--border-light)',
+    gap: 12,
+    padding: '22px 20px 22px',
   },
   logoCircle: {
-    width: 34,
-    height: 34,
-    borderRadius: 10,
-    background: 'var(--primary)',
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    background: 'var(--primary-gradient)',
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    boxShadow: 'var(--shadow-primary)',
+  },
+  brandInfo: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   brandText: {
     fontSize: 16,
     fontWeight: 700,
     color: 'var(--text)',
     letterSpacing: '-0.3px',
+    lineHeight: 1.2,
+  },
+  brandSub: {
+    fontSize: 11,
+    color: 'var(--text-muted)',
+    fontWeight: 500,
+    marginTop: 1,
   },
   nav: {
     display: 'flex',
     flexDirection: 'column',
     gap: 2,
-    padding: '12px 10px',
+    padding: '8px 12px',
     flex: 1,
+  },
+  navLabel: {
+    fontSize: 10,
+    fontWeight: 700,
+    color: 'var(--text-muted)',
+    letterSpacing: '0.1em',
+    padding: '12px 12px 8px',
   },
   navItem: {
     display: 'flex',
     alignItems: 'center',
     gap: 10,
-    padding: '10px 12px',
-    borderRadius: 8,
+    padding: '9px 12px',
+    borderRadius: 10,
     border: 'none',
     background: 'transparent',
     color: 'var(--text-secondary)',
-    fontSize: 14,
+    fontSize: 13.5,
     fontWeight: 500,
     cursor: 'pointer',
-    transition: 'all 150ms ease',
+    transition: 'all 180ms ease',
     textAlign: 'left',
     width: '100%',
     position: 'relative',
@@ -145,29 +182,51 @@ const styles = {
     background: 'var(--bg-muted)',
     color: 'var(--text)',
   },
+  navIconWrap: {
+    width: 30,
+    height: 30,
+    borderRadius: 8,
+    background: 'transparent',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 180ms ease',
+    flexShrink: 0,
+  },
+  navIconWrapActive: {
+    background: 'var(--primary)',
+    color: '#fff',
+    boxShadow: '0 2px 8px rgba(99, 102, 241, 0.3)',
+  },
   activeIndicator: {
     position: 'absolute',
-    left: 0,
+    right: 12,
     top: '50%',
     transform: 'translateY(-50%)',
-    width: 3,
-    height: 20,
-    borderRadius: '0 3px 3px 0',
+    width: 5,
+    height: 5,
+    borderRadius: '50%',
     background: 'var(--primary)',
-    transition: 'opacity 150ms ease',
   },
   bottomSection: {
-    padding: '12px 10px 16px',
-    borderTop: '1px solid var(--border-light)',
+    padding: '12px 12px 18px',
+    borderTop: '1px solid var(--border-subtle)',
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: 6,
   },
   statusBar: {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    padding: '8px 12px',
+    padding: '10px 12px',
+    borderRadius: 10,
+    background: 'var(--bg-muted)',
+  },
+  statusDotOuter: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   statusDot: {
     width: 7,
@@ -177,7 +236,7 @@ const styles = {
   },
   statusText: {
     fontSize: 12,
-    color: 'var(--text-muted)',
+    color: 'var(--text-secondary)',
     fontWeight: 500,
   },
 }

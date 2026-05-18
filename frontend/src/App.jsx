@@ -407,5 +407,8 @@ const styles = {
     display: 'flex',
     overflow: 'hidden',
     background: '#fff',
+    borderRadius: '16px 0 0 16px',
+    margin: '8px 0 8px 0',
+    boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.04)',
   },
 }

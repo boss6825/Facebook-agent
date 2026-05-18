@@ -48,7 +48,7 @@ function isFacebookShareUrl(raw) {
 
 function ThinkingDots() {
   return (
-    <div style={{ display: 'flex', gap: 4, padding: '4px 0' }}>
+    <div style={{ display: 'flex', gap: 5, padding: '4px 0' }}>
       {[0, 1, 2].map((i) => (
         <div
           key={i}
@@ -56,7 +56,8 @@ function ThinkingDots() {
             width: 7,
             height: 7,
             borderRadius: '50%',
-            background: 'var(--text-muted)',
+            background: 'var(--primary)',
+            opacity: 0.6,
             animation: `pulse 1.4s ease-in-out ${i * 0.16}s infinite`,
           }}
         />
@@ -69,10 +70,10 @@ function BotAvatar() {
   return (
     <div
       style={{
-        width: 32,
-        height: 32,
-        borderRadius: 10,
-        background: 'var(--primary)',
+        width: 34,
+        height: 34,
+        borderRadius: 11,
+        background: 'var(--primary-gradient)',
         color: '#fff',
         display: 'flex',
         alignItems: 'center',
@@ -80,9 +81,10 @@ function BotAvatar() {
         flexShrink: 0,
         fontSize: 13,
         fontWeight: 700,
+        boxShadow: '0 2px 8px rgba(99, 102, 241, 0.25)',
       }}
     >
-      <IconZap size={16} />
+      <IconZap size={15} />
     </div>
   )
 }
@@ -94,19 +96,20 @@ function TaskStatusCard({ task }) {
     <div
       style={{
         border: `1px solid ${task.status === 'error' ? '#FECACA' : 'var(--border)'}`,
-        borderRadius: 12,
-        padding: '14px 16px',
+        borderRadius: 14,
+        padding: '16px 18px',
         background: '#fff',
-        maxWidth: 440,
+        maxWidth: 460,
         animation: 'fadeInUp 300ms ease',
+        boxShadow: 'var(--shadow-sm)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
         <div
           style={{
-            width: 28,
-            height: 28,
-            borderRadius: 8,
+            width: 30,
+            height: 30,
+            borderRadius: 9,
             background: cfg.bg,
             color: cfg.color,
             display: 'flex',
@@ -121,12 +124,12 @@ function TaskStatusCard({ task }) {
       </div>
 
       {task.result && task.status === 'done' && (
-        <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6, margin: 0 }}>
           {task.result}
         </p>
       )}
       {task.status === 'error' && (
-        <p style={{ fontSize: 13, color: 'var(--error)', lineHeight: 1.5, margin: 0 }}>
+        <p style={{ fontSize: 13, color: 'var(--error)', lineHeight: 1.6, margin: 0 }}>
           {task.error || task.result || 'Task failed.'}
         </p>
       )}
@@ -151,18 +154,18 @@ function TaskStatusCard({ task }) {
       {task.generated && task.status === 'done' && (
         <div
           style={{
-            marginTop: 10,
-            padding: '10px 12px',
+            marginTop: 12,
+            padding: '12px 14px',
             background: 'var(--bg-alt)',
             borderLeft: '3px solid var(--primary)',
-            borderRadius: 6,
-            fontSize: 12,
+            borderRadius: '0 8px 8px 0',
+            fontSize: 12.5,
             color: 'var(--text-secondary)',
-            lineHeight: 1.5,
+            lineHeight: 1.6,
             whiteSpace: 'pre-wrap',
           }}
         >
-          <strong style={{ color: 'var(--text)' }}>Published {task.action || 'content'}:</strong>
+          <strong style={{ color: 'var(--text)', fontWeight: 600 }}>Published {task.action || 'content'}:</strong>
           <br />
           {task.generated}
         </div>
@@ -180,26 +183,24 @@ function DraftReviewCard({ draft, onPublish, onCancel, bubbleStyle }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft.id])
 
-  const rounded = bubbleStyle === 'rounded'
-
   return (
     <div
       style={{
-        border: '1px solid var(--primary)',
-        borderRadius: rounded ? 14 : 10,
-        padding: 16,
+        border: '1.5px solid var(--primary)',
+        borderRadius: 16,
+        padding: 18,
         background: '#fff',
         maxWidth: 500,
         animation: 'fadeInUp 300ms ease',
-        boxShadow: '0 4px 16px rgba(99, 102, 241, 0.08)',
+        boxShadow: '0 4px 20px rgba(99, 102, 241, 0.1)',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 12 }}>
         <div
           style={{
-            width: 24,
-            height: 24,
-            borderRadius: 6,
+            width: 28,
+            height: 28,
+            borderRadius: 8,
             background: 'var(--primary-light)',
             color: 'var(--primary-text)',
             display: 'flex',
@@ -222,17 +223,20 @@ function DraftReviewCard({ draft, onPublish, onCancel, bubbleStyle }) {
         style={{
           width: '100%',
           background: 'var(--bg-alt)',
-          border: '1px solid var(--border)',
-          borderRadius: 8,
-          padding: '10px 12px',
+          border: '1.5px solid var(--border)',
+          borderRadius: 10,
+          padding: '12px 14px',
           fontSize: 14,
           color: 'var(--text)',
           outline: 'none',
           resize: 'vertical',
-          minHeight: 90,
-          lineHeight: 1.5,
+          minHeight: 100,
+          lineHeight: 1.6,
           fontFamily: 'inherit',
+          transition: 'border-color 200ms',
         }}
+        onFocus={(e) => { e.target.style.borderColor = 'var(--primary)' }}
+        onBlur={(e) => { e.target.style.borderColor = 'var(--border)' }}
       />
 
       <div
@@ -240,17 +244,17 @@ function DraftReviewCard({ draft, onPublish, onCancel, bubbleStyle }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginTop: 10,
+          marginTop: 12,
         }}
       >
-        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{text.length} chars</span>
+        <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 500 }}>{text.length} chars</span>
         <div style={{ display: 'flex', gap: 8 }}>
           <button
             onClick={() => onCancel(draft.id)}
             disabled={publishing}
             style={{
-              padding: '7px 14px',
-              borderRadius: 8,
+              padding: '8px 16px',
+              borderRadius: 9,
               border: '1px solid var(--border)',
               background: '#fff',
               fontSize: 13,
@@ -258,6 +262,7 @@ function DraftReviewCard({ draft, onPublish, onCancel, bubbleStyle }) {
               color: 'var(--text-secondary)',
               cursor: publishing ? 'not-allowed' : 'pointer',
               opacity: publishing ? 0.5 : 1,
+              transition: 'all 150ms',
             }}
           >
             Cancel
@@ -266,18 +271,20 @@ function DraftReviewCard({ draft, onPublish, onCancel, bubbleStyle }) {
             onClick={() => onPublish(draft.id, text)}
             disabled={publishing || !text.trim()}
             style={{
-              padding: '7px 16px',
-              borderRadius: 8,
+              padding: '8px 18px',
+              borderRadius: 9,
               border: 'none',
-              background: 'var(--primary)',
+              background: publishing || !text.trim() ? 'var(--primary)' : 'var(--primary-gradient)',
               color: '#fff',
               fontSize: 13,
               fontWeight: 600,
               cursor: publishing || !text.trim() ? 'not-allowed' : 'pointer',
-              opacity: publishing || !text.trim() ? 0.6 : 1,
+              opacity: publishing || !text.trim() ? 0.55 : 1,
               display: 'flex',
               alignItems: 'center',
               gap: 6,
+              boxShadow: publishing || !text.trim() ? 'none' : 'var(--shadow-primary)',
+              transition: 'all 150ms',
             }}
           >
             {publishing ? <IconLoader size={13} /> : null}
@@ -290,18 +297,17 @@ function DraftReviewCard({ draft, onPublish, onCancel, bubbleStyle }) {
 }
 
 function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) {
-  const rounded = bubbleStyle === 'rounded'
-
   if (message.type === 'thinking') {
     return (
-      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
         <BotAvatar />
         <div
           style={{
-            padding: '12px 16px',
-            borderRadius: rounded ? '4px 16px 16px 16px' : '4px 10px 10px 10px',
-            background: 'var(--bg-alt)',
+            padding: '14px 18px',
+            borderRadius: '6px 18px 18px 18px',
+            background: '#fff',
             border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-xs)',
           }}
         >
           <ThinkingDots />
@@ -312,7 +318,7 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
 
   if (message.type === 'task') {
     return (
-      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
         <BotAvatar />
         <TaskStatusCard task={message.task} />
       </div>
@@ -321,7 +327,7 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
 
   if (message.type === 'draft') {
     return (
-      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
         <BotAvatar />
         <DraftReviewCard
           draft={message.draft}
@@ -335,18 +341,19 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
 
   if (message.type === 'error') {
     return (
-      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
         <BotAvatar />
         <div
           style={{
-            padding: '12px 16px',
-            borderRadius: rounded ? '4px 16px 16px 16px' : '4px 10px 10px 10px',
+            padding: '14px 18px',
+            borderRadius: '6px 18px 18px 18px',
             background: 'var(--error-light)',
             border: '1px solid #FECACA',
-            maxWidth: 440,
+            maxWidth: 460,
             fontSize: 14,
             color: '#991B1B',
-            lineHeight: 1.5,
+            lineHeight: 1.6,
+            boxShadow: 'var(--shadow-xs)',
           }}
         >
           {message.content}
@@ -357,19 +364,20 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
 
   if (message.type === 'bot') {
     return (
-      <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', animation: 'fadeInUp 200ms ease' }}>
         <BotAvatar />
         <div
           style={{
-            padding: '12px 16px',
-            borderRadius: rounded ? '4px 16px 16px 16px' : '4px 10px 10px 10px',
-            background: 'var(--bg-alt)',
+            padding: '14px 18px',
+            borderRadius: '6px 18px 18px 18px',
+            background: '#fff',
             border: '1px solid var(--border)',
             maxWidth: 500,
             fontSize: 14,
             color: 'var(--text)',
             lineHeight: 1.6,
             whiteSpace: 'pre-wrap',
+            boxShadow: 'var(--shadow-xs)',
           }}
         >
           {message.content}
@@ -383,14 +391,15 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
     <div style={{ display: 'flex', justifyContent: 'flex-end', animation: 'fadeInUp 200ms ease' }}>
       <div
         style={{
-          padding: '12px 16px',
-          borderRadius: rounded ? '16px 16px 4px 16px' : '10px 10px 4px 10px',
-          background: 'var(--primary)',
+          padding: '14px 18px',
+          borderRadius: '18px 18px 6px 18px',
+          background: 'var(--primary-gradient)',
           color: '#fff',
           maxWidth: 500,
           fontSize: 14,
           lineHeight: 1.6,
           whiteSpace: 'pre-wrap',
+          boxShadow: 'var(--shadow-primary)',
         }}
       >
         {message.content}
@@ -400,6 +409,7 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
 }
 
 function WelcomeMessage({ onPickPrompt }) {
+  const [hoveredIdx, setHoveredIdx] = useState(null)
   return (
     <div
       style={{
@@ -410,60 +420,71 @@ function WelcomeMessage({ onPickPrompt }) {
         flex: 1,
         gap: 16,
         padding: 40,
-        animation: 'fadeIn 500ms ease',
+        animation: 'fadeIn 600ms ease',
       }}
     >
       <div
         style={{
-          width: 56,
-          height: 56,
-          borderRadius: 16,
-          background: 'var(--primary-light)',
-          color: 'var(--primary)',
+          width: 64,
+          height: 64,
+          borderRadius: 20,
+          background: 'var(--primary-gradient)',
+          color: '#fff',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          boxShadow: '0 8px 32px rgba(99, 102, 241, 0.3)',
+          animation: 'subtleFloat 4s ease-in-out infinite',
         }}
       >
-        <IconZap size={28} />
+        <IconZap size={30} />
       </div>
-      <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text)' }}>FB Agent</h2>
+      <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.3px' }}>
+        FB Agent
+      </h2>
       <p
         style={{
           fontSize: 14,
           color: 'var(--text-secondary)',
           textAlign: 'center',
-          maxWidth: 360,
-          lineHeight: 1.6,
+          maxWidth: 380,
+          lineHeight: 1.7,
         }}
       >
         Send a post command or switch to Comment mode to target a specific Facebook post link.
         Drafts are always generated for review before publishing.
       </p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center', marginTop: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12, width: '100%', maxWidth: 480 }}>
         {QUICK_ACTIONS.map((cmd, i) => (
           <button
             key={i}
             style={{
-              padding: '8px 14px',
-              borderRadius: 20,
+              padding: '12px 18px',
+              borderRadius: 12,
               border: '1px solid var(--border)',
-              background: '#fff',
+              background: hoveredIdx === i ? 'var(--primary-light)' : '#fff',
               fontSize: 13,
-              color: 'var(--text-secondary)',
+              color: hoveredIdx === i ? 'var(--primary-text)' : 'var(--text-secondary)',
               cursor: 'pointer',
-              transition: 'all 150ms',
+              transition: 'all 200ms ease',
+              textAlign: 'left',
+              lineHeight: 1.5,
+              boxShadow: hoveredIdx === i ? '0 2px 8px rgba(99, 102, 241, 0.1)' : 'var(--shadow-xs)',
+              borderColor: hoveredIdx === i ? 'var(--primary)' : 'var(--border)',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--primary)'
-              e.currentTarget.style.color = 'var(--primary)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border)'
-              e.currentTarget.style.color = 'var(--text-secondary)'
-            }}
+            onMouseEnter={() => setHoveredIdx(i)}
+            onMouseLeave={() => setHoveredIdx(null)}
             onClick={() => onPickPrompt(cmd)}
           >
+            <span style={{
+              opacity: 0.5,
+              marginRight: 8,
+              fontSize: 12,
+              fontWeight: 600,
+              color: hoveredIdx === i ? 'var(--primary)' : 'var(--text-muted)',
+            }}>
+              {i + 1}.
+            </span>
             {cmd}
           </button>
         ))}
@@ -487,6 +508,7 @@ export default function ChatView({
   const [commentUrl, setCommentUrl] = useState('')
   const [commentPrompt, setCommentPrompt] = useState('')
   const [urlError, setUrlError] = useState('')
+  const [inputFocused, setInputFocused] = useState(false)
   const messagesScrollRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -551,9 +573,18 @@ export default function ChatView({
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.headerTitle}>Chat</h1>
+        <div>
+          <h1 style={styles.headerTitle}>Chat</h1>
+          <p style={styles.headerSub}>Send commands to manage your Facebook page</p>
+        </div>
         <div style={styles.headerBadge}>
-          <div style={{ width: 6, height: 6, borderRadius: '50%', background: statusDot }} />
+          <div style={{
+            width: 7,
+            height: 7,
+            borderRadius: '50%',
+            background: statusDot,
+            boxShadow: `0 0 6px ${statusDot}`,
+          }} />
           <span>{statusLabel}</span>
         </div>
       </div>
@@ -578,30 +609,27 @@ export default function ChatView({
 
       <div style={styles.inputArea}>
         <div style={styles.modeSwitch}>
-          <button
-            onClick={() => setComposeMode('command')}
-            style={{
-              ...styles.modeBtn,
-              ...(composeMode === 'command' ? styles.modeBtnActive : {}),
-            }}
-            type="button"
-          >
-            Command
-          </button>
-          <button
-            onClick={() => setComposeMode('comment')}
-            style={{
-              ...styles.modeBtn,
-              ...(composeMode === 'comment' ? styles.modeBtnActive : {}),
-            }}
-            type="button"
-          >
-            Comment by Link
-          </button>
+          {['command', 'comment'].map((mode) => (
+            <button
+              key={mode}
+              onClick={() => setComposeMode(mode)}
+              style={{
+                ...styles.modeBtn,
+                ...(composeMode === mode ? styles.modeBtnActive : {}),
+              }}
+              type="button"
+            >
+              {mode === 'command' ? 'Command' : 'Comment by Link'}
+            </button>
+          ))}
         </div>
 
         {composeMode === 'comment' ? (
-          <div style={styles.commentWrap}>
+          <div style={{
+            ...styles.commentWrap,
+            borderColor: inputFocused ? 'var(--primary)' : 'var(--border)',
+            boxShadow: inputFocused ? '0 0 0 3px var(--primary-glow)' : 'var(--shadow-sm)',
+          }}>
             <input
               type="text"
               value={commentUrl}
@@ -609,6 +637,8 @@ export default function ChatView({
                 setCommentUrl(e.target.value)
                 if (urlError) setUrlError('')
               }}
+              onFocus={() => setInputFocused(true)}
+              onBlur={() => setInputFocused(false)}
               placeholder="Facebook post URL (required)"
               style={{
                 ...styles.input,
@@ -616,12 +646,15 @@ export default function ChatView({
               }}
               disabled={isSending}
             />
+            <div style={{ width: '100%', height: 1, background: 'var(--border-subtle)' }} />
             <div style={styles.commentPromptRow}>
               <input
                 type="text"
                 value={commentPrompt}
                 onChange={(e) => setCommentPrompt(e.target.value)}
                 onKeyDown={handleKeyDown}
+                onFocus={() => setInputFocused(true)}
+                onBlur={() => setInputFocused(false)}
                 placeholder="What should the comment say?"
                 style={styles.input}
                 disabled={isSending}
@@ -631,7 +664,7 @@ export default function ChatView({
                 disabled={!commentPrompt.trim() || !commentUrl.trim() || isSending}
                 style={{
                   ...styles.sendBtn,
-                  opacity: commentPrompt.trim() && commentUrl.trim() && !isSending ? 1 : 0.4,
+                  opacity: commentPrompt.trim() && commentUrl.trim() && !isSending ? 1 : 0.35,
                   cursor:
                     !commentPrompt.trim() || !commentUrl.trim() || isSending
                       ? 'not-allowed'
@@ -639,19 +672,25 @@ export default function ChatView({
                 }}
                 aria-label="Send comment task"
               >
-                {isSending ? <IconLoader size={18} /> : <IconSend size={18} />}
+                {isSending ? <IconLoader size={17} /> : <IconSend size={17} />}
               </button>
             </div>
             {urlError && <div style={styles.errorText}>{urlError}</div>}
           </div>
         ) : (
-          <div style={styles.inputWrap}>
+          <div style={{
+            ...styles.inputWrap,
+            borderColor: inputFocused ? 'var(--primary)' : 'var(--border)',
+            boxShadow: inputFocused ? '0 0 0 3px var(--primary-glow)' : 'var(--shadow-sm)',
+          }}>
             <input
               ref={inputRef}
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={() => setInputFocused(true)}
+              onBlur={() => setInputFocused(false)}
               placeholder="Type a command... e.g. 'post about AI trends'"
               style={styles.input}
               disabled={isSending}
@@ -661,17 +700,18 @@ export default function ChatView({
               disabled={!inputValue.trim() || isSending}
               style={{
                 ...styles.sendBtn,
-                opacity: inputValue.trim() && !isSending ? 1 : 0.4,
+                opacity: inputValue.trim() && !isSending ? 1 : 0.35,
                 cursor: !inputValue.trim() || isSending ? 'not-allowed' : 'pointer',
               }}
               aria-label="Send"
             >
-              {isSending ? <IconLoader size={18} /> : <IconSend size={18} />}
+              {isSending ? <IconLoader size={17} /> : <IconSend size={17} />}
             </button>
           </div>
         )}
         <div style={styles.inputHint}>
-          <span>Enter</span> to send
+          <kbd style={styles.kbd}>Enter</kbd>
+          <span>to send</span>
         </div>
       </div>
     </div>
@@ -684,84 +724,96 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '18px 28px',
-    borderBottom: '1px solid var(--border)',
+    padding: '20px 32px',
+    borderBottom: '1px solid var(--border-subtle)',
     background: '#fff',
     flexShrink: 0,
   },
-  headerTitle: { fontSize: 18, fontWeight: 700, color: 'var(--text)' },
+  headerTitle: { fontSize: 18, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.2px' },
+  headerSub: { fontSize: 12.5, color: 'var(--text-muted)', marginTop: 2, fontWeight: 400 },
   headerBadge: {
     display: 'flex',
     alignItems: 'center',
-    gap: 6,
+    gap: 7,
     fontSize: 12,
     color: 'var(--text-muted)',
     fontWeight: 500,
+    padding: '6px 12px',
+    borderRadius: 20,
+    background: 'var(--bg-alt)',
+    border: '1px solid var(--border-subtle)',
   },
   messagesArea: {
     flex: 1,
     overflowY: 'auto',
-    padding: '24px 28px',
+    padding: '28px 32px',
     display: 'flex',
     flexDirection: 'column',
+    background: 'var(--bg-alt)',
   },
   messagesList: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
-    maxWidth: 680,
+    gap: 18,
+    maxWidth: 700,
     width: '100%',
     margin: '0 auto',
   },
   inputArea: {
-    padding: '16px 28px 20px',
-    borderTop: '1px solid var(--border)',
+    padding: '16px 32px 20px',
+    borderTop: '1px solid var(--border-subtle)',
     background: '#fff',
     flexShrink: 0,
   },
   modeSwitch: {
     display: 'flex',
-    gap: 8,
-    maxWidth: 680,
-    margin: '0 auto 10px',
+    gap: 4,
+    maxWidth: 700,
+    margin: '0 auto 12px',
+    background: 'var(--bg-muted)',
+    padding: 3,
+    borderRadius: 10,
+    width: 'fit-content',
   },
   modeBtn: {
-    padding: '6px 12px',
-    borderRadius: 999,
-    border: '1px solid var(--border)',
-    background: '#fff',
-    fontSize: 12,
+    padding: '7px 16px',
+    borderRadius: 8,
+    border: 'none',
+    background: 'transparent',
+    fontSize: 12.5,
     fontWeight: 600,
-    color: 'var(--text-secondary)',
+    color: 'var(--text-muted)',
     cursor: 'pointer',
+    transition: 'all 180ms ease',
   },
   modeBtnActive: {
-    borderColor: 'var(--primary)',
-    background: 'var(--primary-light)',
+    background: '#fff',
     color: 'var(--primary-text)',
+    boxShadow: 'var(--shadow-sm)',
   },
   inputWrap: {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    background: 'var(--bg-alt)',
+    background: '#fff',
     border: '1.5px solid var(--border)',
     borderRadius: 14,
-    padding: '4px 4px 4px 16px',
-    maxWidth: 680,
+    padding: '4px 5px 4px 18px',
+    maxWidth: 700,
     margin: '0 auto',
-    transition: 'border-color 200ms',
+    transition: 'all 200ms ease',
   },
   commentWrap: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
-    background: 'var(--bg-alt)',
+    gap: 0,
+    background: '#fff',
     border: '1.5px solid var(--border)',
     borderRadius: 14,
-    padding: '10px 12px',
-    maxWidth: 680,
+    padding: '6px 14px',
+    maxWidth: 700,
     margin: '0 auto',
+    transition: 'all 200ms ease',
   },
   commentPromptRow: {
     display: 'flex',
@@ -775,33 +827,48 @@ const styles = {
     fontSize: 14,
     outline: 'none',
     color: 'var(--text)',
-    padding: '8px 0',
+    padding: '10px 0',
   },
   inputError: {
     color: '#B91C1C',
   },
   sendBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
+    width: 42,
+    height: 42,
+    borderRadius: 11,
     border: 'none',
-    background: 'var(--primary)',
+    background: 'var(--primary-gradient)',
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'all 150ms',
+    transition: 'all 180ms ease',
     flexShrink: 0,
+    boxShadow: 'var(--shadow-primary)',
   },
   inputHint: {
-    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
     fontSize: 11,
     color: 'var(--text-muted)',
-    marginTop: 8,
+    marginTop: 10,
+  },
+  kbd: {
+    padding: '2px 6px',
+    borderRadius: 5,
+    border: '1px solid var(--border)',
+    background: 'var(--bg-muted)',
+    fontSize: 10,
+    fontWeight: 600,
+    fontFamily: 'inherit',
+    color: 'var(--text-secondary)',
   },
   errorText: {
     fontSize: 12,
     color: '#B91C1C',
-    marginTop: 2,
+    marginTop: 4,
+    padding: '0 2px',
   },
 }

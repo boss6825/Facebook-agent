@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import {
   IconAlertCircle, IconChat, IconCheck, IconHistory, IconLoader, IconRefresh,
 } from './Icons.jsx'
 
 export default function DashboardView({ tasks, onRefresh }) {
+  const [hoveredCard, setHoveredCard] = useState(null)
   const taskList = Object.values(tasks).sort(
     (a, b) => (b.timestamp || 0) - (a.timestamp || 0),
   )
@@ -41,10 +43,13 @@ export default function DashboardView({ tasks, onRefresh }) {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <h1 style={styles.title}>Dashboard</h1>
+        <div>
+          <h1 style={styles.title}>Dashboard</h1>
+          <p style={styles.headerSub}>Overview of your agent activity</p>
+        </div>
         <div style={styles.headerRight}>
           <button style={styles.refreshBtn} onClick={() => onRefresh?.()}>
-            <IconRefresh size={15} />
+            <IconRefresh size={14} />
             <span>Refresh</span>
           </button>
         </div>
@@ -54,25 +59,37 @@ export default function DashboardView({ tasks, onRefresh }) {
         <div style={styles.statsGrid}>
           {statCards.map((card, i) => {
             const { Icon } = card
+            const isHovered = hoveredCard === i
             return (
-              <div key={i} style={{ ...styles.statCard, animationDelay: `${i * 60}ms` }}>
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 10,
-                    background: card.bg,
-                    color: card.color,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: 12,
-                  }}
-                >
-                  <Icon size={18} />
+              <div
+                key={i}
+                style={{
+                  ...styles.statCard,
+                  animationDelay: `${i * 60}ms`,
+                  transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                  boxShadow: isHovered ? 'var(--shadow-md)' : 'var(--shadow-sm)',
+                }}
+                onMouseEnter={() => setHoveredCard(i)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                  <div
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 12,
+                      background: card.bg,
+                      color: card.color,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Icon size={18} />
+                  </div>
                 </div>
-                <div style={styles.statLabel}>{card.label}</div>
                 <div style={styles.statValue}>{card.value}</div>
+                <div style={styles.statLabel}>{card.label}</div>
                 <div style={styles.statSub}>{card.sub}</div>
               </div>
             )
@@ -83,8 +100,20 @@ export default function DashboardView({ tasks, onRefresh }) {
           <h2 style={styles.sectionTitle}>Recent Activity</h2>
           {recentTasks.length === 0 ? (
             <div style={styles.emptyState}>
-              <IconHistory size={24} />
-              <p>No activity yet. Start by sending a command in Chat.</p>
+              <div style={{
+                width: 48,
+                height: 48,
+                borderRadius: 14,
+                background: 'var(--bg-muted)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--text-muted)',
+              }}>
+                <IconHistory size={22} />
+              </div>
+              <p style={{ margin: 0, fontWeight: 500 }}>No activity yet</p>
+              <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>Start by sending a command in Chat.</p>
             </div>
           ) : (
             <div style={styles.activityList}>
@@ -106,6 +135,7 @@ export default function DashboardView({ tasks, onRefresh }) {
                         background: sc.color,
                         flexShrink: 0,
                         marginTop: 5,
+                        boxShadow: `0 0 6px ${sc.color}`,
                       }}
                     />
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -120,8 +150,8 @@ export default function DashboardView({ tasks, onRefresh }) {
                         fontWeight: 600,
                         color: sc.color,
                         background: sc.bg,
-                        padding: '3px 8px',
-                        borderRadius: 6,
+                        padding: '4px 10px',
+                        borderRadius: 8,
                         flexShrink: 0,
                       }}
                     >
@@ -144,77 +174,83 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '18px 28px',
-    borderBottom: '1px solid var(--border)',
+    padding: '20px 32px',
+    borderBottom: '1px solid var(--border-subtle)',
     background: '#fff',
     flexShrink: 0,
   },
-  title: { fontSize: 18, fontWeight: 700, color: 'var(--text)' },
+  title: { fontSize: 18, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.2px' },
+  headerSub: { fontSize: 12.5, color: 'var(--text-muted)', marginTop: 2, fontWeight: 400 },
   headerRight: { display: 'flex', gap: 8 },
   refreshBtn: {
     display: 'flex',
     alignItems: 'center',
     gap: 6,
-    padding: '7px 14px',
-    borderRadius: 8,
+    padding: '8px 16px',
+    borderRadius: 10,
     border: '1px solid var(--border)',
     background: '#fff',
     fontSize: 13,
     fontWeight: 500,
     color: 'var(--text-secondary)',
     cursor: 'pointer',
+    transition: 'all 150ms',
+    boxShadow: 'var(--shadow-xs)',
   },
-  content: { flex: 1, overflowY: 'auto', padding: 28 },
+  content: { flex: 1, overflowY: 'auto', padding: 32 },
   statsGrid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
     gap: 16,
-    marginBottom: 32,
+    marginBottom: 36,
   },
   statCard: {
-    padding: 20,
+    padding: 22,
     background: '#fff',
-    border: '1px solid var(--border)',
-    borderRadius: 14,
+    border: '1px solid var(--border-subtle)',
+    borderRadius: 16,
     animation: 'fadeInUp 400ms ease both',
+    transition: 'all 250ms ease',
+    cursor: 'default',
   },
   statLabel: {
-    fontSize: 11,
-    fontWeight: 600,
-    color: 'var(--text-muted)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.06em',
+    fontSize: 13,
+    fontWeight: 500,
+    color: 'var(--text-secondary)',
+    marginTop: 4,
   },
-  statValue: { fontSize: 32, fontWeight: 700, color: 'var(--text)', marginTop: 4 },
-  statSub: { fontSize: 12, color: 'var(--text-muted)', marginTop: 4 },
+  statValue: { fontSize: 34, fontWeight: 700, color: 'var(--text)', letterSpacing: '-1px', lineHeight: 1 },
+  statSub: { fontSize: 12, color: 'var(--text-muted)', marginTop: 6 },
   section: {},
-  sectionTitle: { fontSize: 14, fontWeight: 700, color: 'var(--text)', marginBottom: 14 },
+  sectionTitle: { fontSize: 15, fontWeight: 700, color: 'var(--text)', marginBottom: 14, letterSpacing: '-0.2px' },
   emptyState: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 10,
-    padding: '40px 20px',
-    color: 'var(--text-muted)',
+    gap: 8,
+    padding: '48px 20px',
+    color: 'var(--text-secondary)',
     fontSize: 14,
-    background: 'var(--bg-alt)',
-    borderRadius: 12,
+    background: '#fff',
+    borderRadius: 16,
     border: '1px dashed var(--border)',
   },
   activityList: {
     display: 'flex',
     flexDirection: 'column',
-    border: '1px solid var(--border)',
-    borderRadius: 12,
+    border: '1px solid var(--border-subtle)',
+    borderRadius: 14,
     background: '#fff',
     overflow: 'hidden',
+    boxShadow: 'var(--shadow-xs)',
   },
   activityItem: {
     display: 'flex',
     alignItems: 'center',
     gap: 12,
-    padding: '13px 16px',
-    borderBottom: '1px solid var(--border-light)',
+    padding: '14px 18px',
+    borderBottom: '1px solid var(--border-subtle)',
+    transition: 'background 150ms ease',
   },
   activityCmd: {
     fontSize: 13,

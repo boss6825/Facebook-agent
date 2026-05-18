@@ -106,6 +106,8 @@ export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) 
                 placeholder="123456789012345"
                 style={styles.input}
                 autoFocus
+                onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px var(--primary-glow)' }}
+                onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none' }}
               />
             </div>
 
@@ -117,8 +119,10 @@ export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) 
                   value={pageAccessToken}
                   onChange={(e) => setPageAccessToken(e.target.value)}
                   placeholder="EAAB..."
-                  style={{ ...styles.input, paddingRight: 42 }}
+                  style={{ ...styles.input, paddingRight: 44 }}
                   onKeyDown={(e) => e.key === 'Enter' && handleSave()}
+                  onFocus={(e) => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px var(--primary-glow)' }}
+                  onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; e.target.style.boxShadow = 'none' }}
                 />
                 <button
                   style={styles.eyeBtn}
@@ -145,7 +149,10 @@ export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) 
             )}
 
             <button
-              style={{ ...styles.saveBtn, opacity: saving ? 0.7 : 1 }}
+              style={{
+                ...styles.saveBtn,
+                opacity: saving ? 0.7 : 1,
+              }}
               onClick={handleSave}
               disabled={saving}
             >
@@ -162,9 +169,9 @@ const styles = {
   overlay: {
     position: 'fixed',
     inset: 0,
-    background: 'rgba(15, 23, 42, 0.4)',
-    backdropFilter: 'blur(4px)',
-    WebkitBackdropFilter: 'blur(4px)',
+    background: 'rgba(15, 23, 42, 0.5)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -173,10 +180,10 @@ const styles = {
   },
   modal: {
     background: '#fff',
-    borderRadius: 16,
-    width: 420,
+    borderRadius: 20,
+    width: 440,
     maxWidth: '90vw',
-    boxShadow: '0 24px 80px rgba(0,0,0,0.15)',
+    boxShadow: 'var(--shadow-xl)',
     animation: 'fadeInUp 300ms ease',
     overflow: 'hidden',
   },
@@ -184,22 +191,24 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '20px 24px',
-    borderBottom: '1px solid var(--border)',
+    padding: '22px 24px',
+    borderBottom: '1px solid var(--border-subtle)',
   },
   title: {
     fontSize: 17,
     fontWeight: 700,
     color: 'var(--text)',
+    letterSpacing: '-0.2px',
   },
   closeBtn: {
-    background: 'none',
+    background: 'var(--bg-muted)',
     border: 'none',
     color: 'var(--text-muted)',
-    padding: 4,
-    borderRadius: 6,
+    padding: 6,
+    borderRadius: 8,
     display: 'flex',
     cursor: 'pointer',
+    transition: 'all 150ms',
   },
   body: {
     padding: 24,
@@ -210,17 +219,17 @@ const styles = {
   description: {
     fontSize: 13,
     color: 'var(--text-secondary)',
-    lineHeight: 1.6,
+    lineHeight: 1.7,
   },
-  field: { display: 'flex', flexDirection: 'column', gap: 6 },
+  field: { display: 'flex', flexDirection: 'column', gap: 7 },
   label: { fontSize: 13, fontWeight: 600, color: 'var(--text)' },
   input: {
-    padding: '10px 14px',
-    borderRadius: 10,
+    padding: '11px 14px',
+    borderRadius: 11,
     border: '1.5px solid var(--border)',
     fontSize: 14,
     outline: 'none',
-    transition: 'border-color 150ms',
+    transition: 'all 200ms ease',
     width: '100%',
     background: 'var(--bg-alt)',
     color: 'var(--text)',
@@ -241,70 +250,73 @@ const styles = {
   error: {
     display: 'flex',
     alignItems: 'center',
-    gap: 6,
+    gap: 7,
     fontSize: 13,
     color: 'var(--error)',
-    padding: '8px 12px',
+    padding: '10px 14px',
     background: 'var(--error-light)',
-    borderRadius: 8,
+    borderRadius: 10,
   },
   success: {
     display: 'flex',
     alignItems: 'center',
-    gap: 6,
+    gap: 7,
     fontSize: 13,
     color: '#065F46',
-    padding: '8px 12px',
+    padding: '10px 14px',
     background: 'var(--success-light)',
-    borderRadius: 8,
+    borderRadius: 10,
     border: '1px solid #D1FAE5',
   },
   saveBtn: {
-    padding: '11px 20px',
-    borderRadius: 10,
+    padding: '12px 20px',
+    borderRadius: 11,
     border: 'none',
-    background: 'var(--primary)',
+    background: 'var(--primary-gradient)',
     color: '#fff',
     fontSize: 14,
     fontWeight: 600,
     cursor: 'pointer',
-    transition: 'all 150ms',
+    transition: 'all 180ms ease',
     marginTop: 4,
+    boxShadow: 'var(--shadow-primary)',
   },
   connectedCard: {
     display: 'flex',
     alignItems: 'center',
     gap: 14,
-    padding: 16,
+    padding: 18,
     background: 'var(--success-light)',
-    borderRadius: 12,
+    borderRadius: 14,
     border: '1px solid #D1FAE5',
   },
   connectedIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 10,
+    width: 42,
+    height: 42,
+    borderRadius: 12,
     background: '#10B981',
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
+    boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
   },
   connectedTitle: { fontSize: 14, fontWeight: 600, color: '#065F46' },
-  connectedSub: { fontSize: 12, color: '#047857', marginTop: 2 },
+  connectedSub: { fontSize: 12.5, color: '#047857', marginTop: 2, lineHeight: 1.5 },
   logoutBtn: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    padding: 10,
-    borderRadius: 10,
+    padding: 11,
+    borderRadius: 11,
     border: '1.5px solid var(--border)',
     background: '#fff',
     color: 'var(--text-secondary)',
     fontSize: 13,
     fontWeight: 500,
     cursor: 'pointer',
+    transition: 'all 150ms',
   },
 }
