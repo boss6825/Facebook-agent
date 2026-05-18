@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  IconChat, IconDashboard, IconHistory, IconSettings, IconZap,
+  IconChat, IconDashboard, IconHistory, IconMoon, IconSettings, IconSun, IconZap,
 } from './Icons.jsx'
 
 const NAV_ITEMS = [
@@ -9,8 +9,17 @@ const NAV_ITEMS = [
   { id: 'history', label: 'History', icon: IconHistory },
 ]
 
-export default function Sidebar({ currentPage, onNavigate, backendConnected, isSetup, onOpenSettings }) {
+export default function Sidebar({
+  currentPage,
+  onNavigate,
+  backendConnected,
+  isSetup,
+  onOpenSettings,
+  theme,
+  onToggleTheme,
+}) {
   const [hoveredItem, setHoveredItem] = useState(null)
+  const ThemeIcon = theme === 'dark' ? IconSun : IconMoon
 
   return (
     <aside style={styles.container}>
@@ -59,6 +68,21 @@ export default function Sidebar({ currentPage, onNavigate, backendConnected, isS
 
       <div style={styles.bottomSection}>
         <button
+          onClick={onToggleTheme}
+          onMouseEnter={() => setHoveredItem('theme')}
+          onMouseLeave={() => setHoveredItem(null)}
+          style={{
+            ...styles.navItem,
+            ...(hoveredItem === 'theme' ? styles.navItemHover : {}),
+          }}
+        >
+          <div style={styles.navIconWrap}>
+            <ThemeIcon size={16} />
+          </div>
+          <span>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+        </button>
+
+        <button
           onClick={onOpenSettings}
           onMouseEnter={() => setHoveredItem('settings')}
           onMouseLeave={() => setHoveredItem(null)}
@@ -101,7 +125,7 @@ const styles = {
     width: 'var(--sidebar-width)',
     minWidth: 'var(--sidebar-width)',
     height: '100%',
-    background: '#FAFBFE',
+    background: 'var(--sidebar-bg)',
     borderRight: '1px solid var(--border-subtle)',
     display: 'flex',
     flexDirection: 'column',
@@ -139,7 +163,7 @@ const styles = {
   brandSub: {
     fontSize: 11,
     color: 'var(--text-muted)',
-    fontWeight: 500,
+    fontWeight: 600,
     marginTop: 1,
   },
   nav: {
@@ -166,7 +190,7 @@ const styles = {
     background: 'transparent',
     color: 'var(--text-secondary)',
     fontSize: 13.5,
-    fontWeight: 500,
+    fontWeight: 600,
     cursor: 'pointer',
     transition: 'all 180ms ease',
     textAlign: 'left',
@@ -237,6 +261,6 @@ const styles = {
   statusText: {
     fontSize: 12,
     color: 'var(--text-secondary)',
-    fontWeight: 500,
+    fontWeight: 600,
   },
 }

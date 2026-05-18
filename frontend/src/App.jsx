@@ -9,6 +9,7 @@ import CredentialModal from './components/CredentialModal.jsx'
 const POLL_INTERVAL_MS = 2000
 const POLL_MAX_ATTEMPTS = 240 // 8 minutes
 const TASK_STORAGE_KEY = 'fb_agent_tasks'
+const THEME_STORAGE_KEY = 'fb_agent_theme'
 
 function loadTasks() {
   try {
@@ -26,10 +27,19 @@ function saveTasks(tasks) {
   }
 }
 
+function loadTheme() {
+  try {
+    return localStorage.getItem(THEME_STORAGE_KEY) || 'light'
+  } catch {
+    return 'light'
+  }
+}
+
 export default function App() {
   const [page, setPage] = useState('chat')
   const [messages, setMessages] = useState([])
   const [tasks, setTasks] = useState(loadTasks)
+  const [theme, setTheme] = useState(loadTheme)
   const [backendConnected, setBackendConnected] = useState(false)
   const [isSetup, setIsSetup] = useState(false)
   const [showCredModal, setShowCredModal] = useState(false)
@@ -40,6 +50,15 @@ export default function App() {
   useEffect(() => {
     saveTasks(tasks)
   }, [tasks])
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme)
+    } catch {
+      /* ignore */
+    }
+  }, [theme])
 
   // Backend health + setup polling
   useEffect(() => {
@@ -355,6 +374,8 @@ export default function App() {
         backendConnected={backendConnected}
         isSetup={isSetup}
         onOpenSettings={() => setShowCredModal(true)}
+        theme={theme}
+        onToggleTheme={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
       />
       <main style={styles.main}>
         {page === 'chat' && (
@@ -406,9 +427,9 @@ const styles = {
     flex: 1,
     display: 'flex',
     overflow: 'hidden',
-    background: '#fff',
+    background: 'var(--bg)',
     borderRadius: '16px 0 0 16px',
     margin: '8px 0 8px 0',
-    boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.04)',
+    boxShadow: 'var(--shadow-md)',
   },
 }

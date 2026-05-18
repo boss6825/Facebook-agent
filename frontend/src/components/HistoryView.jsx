@@ -4,13 +4,13 @@ import {
 } from './Icons.jsx'
 
 const STATUS_MAP = {
-  done: { color: '#10B981', bg: '#ECFDF5', label: 'Completed', Icon: IconCheck },
-  error: { color: '#EF4444', bg: '#FEF2F2', label: 'Failed', Icon: IconAlertCircle },
-  running: { color: '#6366F1', bg: '#EEF2FF', label: 'Running', Icon: IconLoader },
-  publishing: { color: '#6366F1', bg: '#EEF2FF', label: 'Publishing', Icon: IconLoader },
-  processing: { color: '#6366F1', bg: '#EEF2FF', label: 'Processing', Icon: IconLoader },
-  draft: { color: '#6366F1', bg: '#EEF2FF', label: 'Draft', Icon: IconLoader },
-  pending: { color: '#F59E0B', bg: '#FFFBEB', label: 'Pending', Icon: IconHistory },
+  done: { color: 'var(--success)', bg: 'var(--success-light)', label: 'Completed', Icon: IconCheck },
+  error: { color: 'var(--error)', bg: 'var(--error-light)', label: 'Failed', Icon: IconAlertCircle },
+  running: { color: 'var(--primary)', bg: 'var(--primary-light)', label: 'Running', Icon: IconLoader },
+  publishing: { color: 'var(--primary)', bg: 'var(--primary-light)', label: 'Publishing', Icon: IconLoader },
+  processing: { color: 'var(--primary)', bg: 'var(--primary-light)', label: 'Processing', Icon: IconLoader },
+  draft: { color: 'var(--primary)', bg: 'var(--primary-light)', label: 'Draft', Icon: IconLoader },
+  pending: { color: 'var(--warning)', bg: 'var(--warning-light)', label: 'Pending', Icon: IconHistory },
 }
 
 const isActive = (t) =>
@@ -146,7 +146,7 @@ export default function HistoryView({ tasks }) {
                       <div style={styles.taskResult}>{task.result}</div>
                     )}
                     {(task.error || (task.result && task.status === 'error')) && (
-                      <div style={{ ...styles.taskResult, color: '#DC2626' }}>
+                      <div style={{ ...styles.taskResult, color: 'var(--danger-text)' }}>
                         {task.error || task.result}
                       </div>
                     )}
@@ -200,7 +200,7 @@ const styles = {
     justifyContent: 'space-between',
     padding: '20px 32px',
     borderBottom: '1px solid var(--border-subtle)',
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     flexShrink: 0,
   },
   title: { fontSize: 18, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.2px' },
@@ -251,7 +251,7 @@ const styles = {
     padding: '52px 20px',
     color: 'var(--text-secondary)',
     fontSize: 14,
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     borderRadius: 16,
     border: '1px dashed var(--border)',
   },
@@ -263,7 +263,7 @@ const styles = {
     padding: '18px 20px',
     borderRadius: 14,
     border: '1px solid var(--border-subtle)',
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     transition: 'all 200ms ease',
     boxShadow: 'var(--shadow-xs)',
   },

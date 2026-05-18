@@ -98,7 +98,7 @@ function TaskStatusCard({ task }) {
         border: `1px solid ${task.status === 'error' ? '#FECACA' : 'var(--border)'}`,
         borderRadius: 14,
         padding: '16px 18px',
-        background: '#fff',
+        background: 'var(--bg-elevated)',
         maxWidth: 460,
         animation: 'fadeInUp 300ms ease',
         boxShadow: 'var(--shadow-sm)',
@@ -189,7 +189,7 @@ function DraftReviewCard({ draft, onPublish, onCancel, bubbleStyle }) {
         border: '1.5px solid var(--primary)',
         borderRadius: 16,
         padding: 18,
-        background: '#fff',
+        background: 'var(--bg-elevated)',
         maxWidth: 500,
         animation: 'fadeInUp 300ms ease',
         boxShadow: '0 4px 20px rgba(99, 102, 241, 0.1)',
@@ -256,7 +256,7 @@ function DraftReviewCard({ draft, onPublish, onCancel, bubbleStyle }) {
               padding: '8px 16px',
               borderRadius: 9,
               border: '1px solid var(--border)',
-              background: '#fff',
+              background: 'var(--bg-elevated)',
               fontSize: 13,
               fontWeight: 500,
               color: 'var(--text-secondary)',
@@ -305,7 +305,7 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
           style={{
             padding: '14px 18px',
             borderRadius: '6px 18px 18px 18px',
-            background: '#fff',
+            background: 'var(--bg-elevated)',
             border: '1px solid var(--border)',
             boxShadow: 'var(--shadow-xs)',
           }}
@@ -351,7 +351,7 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
             border: '1px solid #FECACA',
             maxWidth: 460,
             fontSize: 14,
-            color: '#991B1B',
+            color: 'var(--danger-text)',
             lineHeight: 1.6,
             boxShadow: 'var(--shadow-xs)',
           }}
@@ -370,7 +370,7 @@ function MessageBubble({ message, bubbleStyle, onPublishDraft, onCancelDraft }) 
           style={{
             padding: '14px 18px',
             borderRadius: '6px 18px 18px 18px',
-            background: '#fff',
+            background: 'var(--bg-elevated)',
             border: '1px solid var(--border)',
             maxWidth: 500,
             fontSize: 14,
@@ -726,7 +726,7 @@ const styles = {
     justifyContent: 'space-between',
     padding: '20px 32px',
     borderBottom: '1px solid var(--border-subtle)',
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     flexShrink: 0,
   },
   headerTitle: { fontSize: 18, fontWeight: 700, color: 'var(--text)', letterSpacing: '-0.2px' },
@@ -762,7 +762,7 @@ const styles = {
   inputArea: {
     padding: '16px 32px 20px',
     borderTop: '1px solid var(--border-subtle)',
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     flexShrink: 0,
   },
   modeSwitch: {
@@ -787,7 +787,7 @@ const styles = {
     transition: 'all 180ms ease',
   },
   modeBtnActive: {
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     color: 'var(--primary-text)',
     boxShadow: 'var(--shadow-sm)',
   },
@@ -795,7 +795,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     border: '1.5px solid var(--border)',
     borderRadius: 14,
     padding: '4px 5px 4px 18px',
@@ -807,7 +807,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: 0,
-    background: '#fff',
+    background: 'var(--bg-elevated)',
     border: '1.5px solid var(--border)',
     borderRadius: 14,
     padding: '6px 14px',
@@ -830,7 +830,7 @@ const styles = {
     padding: '10px 0',
   },
   inputError: {
-    color: '#B91C1C',
+    color: 'var(--danger-text)',
   },
   sendBtn: {
     width: 42,
@@ -867,7 +867,7 @@ const styles = {
   },
   errorText: {
     fontSize: 12,
-    color: '#B91C1C',
+    color: 'var(--danger-text)',
     marginTop: 4,
     padding: '0 2px',
   },

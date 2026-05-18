@@ -4,6 +4,7 @@ body {
   font-family: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #0F172A;
   background: #FFFFFF;
+  font-weight: 500;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -25,12 +26,15 @@ body {
   --bg-alt: #F8FAFC;
   --bg-muted: #F1F5F9;
   --bg-elevated: #FFFFFF;
+  --sidebar-bg: #FAFBFE;
   --border: #E2E8F0;
   --border-light: #F1F5F9;
   --border-subtle: #EDF2F7;
   --text: #0F172A;
-  --text-secondary: #64748B;
-  --text-muted: #94A3B8;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --danger-text: #991B1B;
+  --success-text: #065F46;
   --sidebar-width: 248px;
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -42,6 +46,46 @@ body {
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --primary: #818CF8;
+  --primary-hover: #A5B4FC;
+  --primary-light: #252A58;
+  --primary-text: #C7D2FE;
+  --primary-glow: rgba(129, 140, 248, 0.22);
+  --primary-gradient: linear-gradient(135deg, #818CF8 0%, #A78BFA 100%);
+  --success: #34D399;
+  --success-light: #073B2D;
+  --warning: #FBBF24;
+  --warning-light: #402F08;
+  --error: #F87171;
+  --error-light: #451A1A;
+  --bg: #0B1120;
+  --bg-alt: #0F172A;
+  --bg-muted: #1E293B;
+  --bg-elevated: #111827;
+  --sidebar-bg: #0B1120;
+  --border: #334155;
+  --border-light: #253247;
+  --border-subtle: #1E293B;
+  --text: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --danger-text: #FCA5A5;
+  --success-text: #A7F3D0;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.42), 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.5), 0 8px 16px rgba(0, 0, 0, 0.35);
+  --shadow-primary: 0 4px 14px rgba(129, 140, 248, 0.3);
+}
+
+:root[data-theme='dark'] body {
+  color: var(--text);
+  background: var(--bg);
 }
 
 @keyframes fadeInUp {
@@ -77,8 +121,8 @@ body {
 ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
 
-input, textarea { font-family: inherit; }
-button { font-family: inherit; cursor: pointer; }
+input, textarea { font-family: inherit; font-weight: 500; }
+button { font-family: inherit; font-weight: 600; cursor: pointer; }
 
 ::selection {
   background: var(--primary-light);
