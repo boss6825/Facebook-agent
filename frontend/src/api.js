@@ -13,10 +13,10 @@ async function jsonFetch(url, opts = {}) {
 export const api = {
   health: () => jsonFetch('/health'),
   setupStatus: () => jsonFetch('/status/setup'),
-  saveCredentials: (email, password) =>
+  saveCredentials: (pageId, pageAccessToken) =>
     jsonFetch('/auth/credentials', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ page_id: pageId, page_access_token: pageAccessToken }),
     }),
   logout: () => jsonFetch('/auth/logout', { method: 'POST' }),
   sendChat: (message, taskId) =>

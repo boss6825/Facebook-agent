@@ -123,13 +123,13 @@ function TaskStatusCard({ task }) {
       {task.status === 'publishing' && (
         <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
           {task.action === 'comment'
-            ? 'Posting comment to Facebook via browser automation...'
-            : 'Posting to Facebook via browser automation...'}
+            ? 'Posting comment through the Graph API...'
+            : 'Posting to the Page through the Graph API...'}
         </p>
       )}
       {task.status === 'running' && (
         <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
-          Executing browser automation...
+          Publishing through the Graph API...
         </p>
       )}
       {(task.status === 'pending' || task.status === 'processing') && (

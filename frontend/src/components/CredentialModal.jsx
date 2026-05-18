@@ -5,16 +5,16 @@ import {
 } from './Icons.jsx'
 
 export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
+  const [pageId, setPageId] = useState('')
+  const [pageAccessToken, setPageAccessToken] = useState('')
+  const [showToken, setShowToken] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [loggingOut, setLoggingOut] = useState(false)
 
   async function handleSave() {
-    if (!email.trim() || !password.trim()) {
+    if (!pageId.trim() || !pageAccessToken.trim()) {
       setError('Please fill in both fields')
       return
     }
@@ -22,7 +22,7 @@ export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) 
     setError('')
     setSuccess('')
     try {
-      await api.saveCredentials(email.trim(), password.trim())
+      await api.saveCredentials(pageId.trim(), pageAccessToken.trim())
       onSave()
     } catch (e) {
       setError(e.message || 'Could not connect to backend')
@@ -65,7 +65,7 @@ export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) 
               <div>
                 <div style={styles.connectedTitle}>Facebook Connected</div>
                 <div style={styles.connectedSub}>
-                  Your credentials are encrypted and stored securely.
+                  Your Page API credentials are stored locally on this server.
                 </div>
               </div>
             </div>
@@ -75,7 +75,7 @@ export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) 
               disabled={loggingOut}
             >
               <IconLogout size={16} />
-              {loggingOut ? 'Logging out...' : 'Disconnect & Clear Session'}
+              {loggingOut ? 'Disconnecting...' : 'Disconnect Page Token'}
             </button>
             {error && (
               <div style={styles.error}>
@@ -93,40 +93,40 @@ export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) 
         ) : (
           <div style={styles.body}>
             <p style={styles.description}>
-              Enter your Facebook credentials. They are encrypted with AES-128 and stored
-              locally on your server. Never sent anywhere else.
+              Enter the Facebook Page ID and Page access token used by the Graph API.
+              Add FACEBOOK_APP_SECRET in Backend/.env if your Meta app requires app secret proof.
             </p>
 
             <div style={styles.field}>
-              <label style={styles.label}>Email</label>
+              <label style={styles.label}>Page ID</label>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your@email.com"
+                type="text"
+                value={pageId}
+                onChange={(e) => setPageId(e.target.value)}
+                placeholder="123456789012345"
                 style={styles.input}
                 autoFocus
               />
             </div>
 
             <div style={styles.field}>
-              <label style={styles.label}>Password</label>
+              <label style={styles.label}>Page Access Token</label>
               <div style={styles.passwordWrap}>
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  type={showToken ? 'text' : 'password'}
+                  value={pageAccessToken}
+                  onChange={(e) => setPageAccessToken(e.target.value)}
+                  placeholder="EAAB..."
                   style={{ ...styles.input, paddingRight: 42 }}
                   onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                 />
                 <button
                   style={styles.eyeBtn}
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => setShowToken(!showToken)}
                   type="button"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showToken ? 'Hide token' : 'Show token'}
                 >
-                  {showPassword ? <IconEyeOff size={16} /> : <IconEye size={16} />}
+                  {showToken ? <IconEyeOff size={16} /> : <IconEye size={16} />}
                 </button>
               </div>
             </div>
@@ -149,7 +149,7 @@ export default function CredentialModal({ isSetup, onClose, onSave, onLogout }) 
               onClick={handleSave}
               disabled={saving}
             >
-              {saving ? 'Connecting...' : 'Connect Facebook'}
+              {saving ? 'Connecting...' : 'Connect Page'}
             </button>
           </div>
         )}
