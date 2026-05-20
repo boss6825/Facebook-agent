@@ -5,7 +5,6 @@ import {
 
 const QUICK_ACTIONS = [
   'Post about AI trends on Facebook',
-  'Comment on https://www.facebook.com/zuck/posts/10102577175875681 saying Great insight, thanks for sharing.',
   'Post a company update',
 ]
 
