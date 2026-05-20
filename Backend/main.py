@@ -6,7 +6,7 @@ from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-from facebook_api import FacebookAPIError, is_facebook_share_url, publish_comment, publish_page_post, share_url_error
+from facebook_api import FacebookAPIError, publish_comment, publish_page_post
 from facebook_config import (
     clear_facebook_config,
     has_facebook_config,
@@ -209,8 +209,6 @@ def _resolve_intent(payload: DraftRequest) -> dict:
             raise ValueError("A content brief or message is required.")
         if action == "comment" and not (payload.target_url or "").strip():
             raise ValueError("A target Facebook post URL is required for comments.")
-        if action == "comment" and is_facebook_share_url(payload.target_url):
-            raise ValueError(share_url_error())
         return {
             "action": action,
             "content_brief": brief,
@@ -218,8 +216,6 @@ def _resolve_intent(payload: DraftRequest) -> dict:
         }
 
     intent = parse_intent(payload.message or "")
-    if intent.action == "comment" and is_facebook_share_url(intent.target_url):
-        raise ValueError(share_url_error())
     return {
         "action": intent.action,
         "content_brief": intent.content_brief,

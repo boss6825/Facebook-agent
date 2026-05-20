@@ -529,13 +529,6 @@ export default function ChatView({
         setUrlError('Enter a valid Facebook post URL from facebook.com or fb.watch.')
         return
       }
-      if (isFacebookShareUrl(normalizedUrl)) {
-        setUrlError(
-          'Share links hide the post ID. Open the post and copy its timestamp/permalink URL, or paste the raw Graph post ID.',
-        )
-        return
-      }
-
       setUrlError('')
       onSendMessage({
         mode: 'comment',

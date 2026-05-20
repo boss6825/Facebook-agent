@@ -24,9 +24,6 @@ def publish_page_post(config: FacebookConfig, message: str) -> dict:
 
 
 def publish_comment(config: FacebookConfig, target_url: str, message: str) -> dict:
-    if is_facebook_share_url(target_url):
-        raise FacebookAPIError(_share_url_error())
-
     object_id = resolve_facebook_object_id(config, target_url)
     if not object_id:
         raise FacebookAPIError(
@@ -34,6 +31,12 @@ def publish_comment(config: FacebookConfig, target_url: str, message: str) -> di
             "story_fbid/fbid, use the post permalink, or pass the raw Graph post ID. "
             "Facebook share links may fail if Meta does not expose the underlying post to your token."
         )
+    # A bare numeric ID (no underscore) hits the deprecated "singular statuses" endpoint.
+    # Look it up via the Graph API to get the full {owner}_{post} compound ID.
+    if "_" not in object_id and object_id.isdigit():
+        compound_id = _lookup_compound_post_id(config, object_id)
+        if compound_id:
+            object_id = compound_id
     return _graph_post(config, f"/{object_id}/comments", {"message": _clean_message(message)})
 
 
@@ -168,14 +171,35 @@ def _resolve_one_redirect_object_id(target_url: str) -> str | None:
                 target_url,
                 headers={
                     "user-agent": (
-                        "Mozilla/5.0 AppleWebKit/537.36 "
-                        "(KHTML, like Gecko) Chrome/125.0 Safari/537.36"
-                    )
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/125.0.0.0 Safari/537.36"
+                    ),
+                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                    "accept-language": "en-US,en;q=0.9",
+                    "sec-fetch-dest": "document",
+                    "sec-fetch-mode": "navigate",
+                    "sec-fetch-site": "none",
+                    "sec-fetch-user": "?1",
                 },
             )
     except httpx.HTTPError:
         return None
 
+    # Prefer numeric IDs from HTML (canonical/og:url) over pfbid slugs from URL hops
+    content_type = response.headers.get("content-type", "")
+    if "text/html" in content_type.lower():
+        html_text = response.text[:500_000]
+        hidden_id = _extract_object_id_from_html(html_text)
+        if hidden_id:
+            return hidden_id
+
+        for candidate_url in _extract_canonical_urls(html_text):
+            candidate_id = extract_facebook_object_id(candidate_url)
+            if candidate_id:
+                return candidate_id
+
+    # Fall back to IDs extracted from redirect hop URLs
     for hop in [*response.history, response]:
         hop_id = extract_facebook_object_id(str(hop.url))
         if hop_id:
@@ -186,25 +210,29 @@ def _resolve_one_redirect_object_id(target_url: str) -> str | None:
             if location_id:
                 return location_id
 
-    final_id = extract_facebook_object_id(str(response.url))
-    if final_id:
-        return final_id
-
-    content_type = response.headers.get("content-type", "")
-    if "text/html" not in content_type.lower():
-        return None
-
-    html_text = response.text[:500_000]
-    hidden_id = _extract_object_id_from_html(html_text)
-    if hidden_id:
-        return hidden_id
-
-    for candidate_url in _extract_canonical_urls(html_text):
-        candidate_id = extract_facebook_object_id(candidate_url)
-        if candidate_id:
-            return candidate_id
-
     return None
+
+
+def _lookup_compound_post_id(config: FacebookConfig, bare_id: str) -> str | None:
+    """Look up a bare post ID via Graph API to get the {owner}_{post} compound form."""
+    url = f"https://graph.facebook.com/{FACEBOOK_GRAPH_VERSION}/{bare_id}"
+    params = {"fields": "id", "access_token": config.page_access_token}
+    proof = _appsecret_proof(config.page_access_token, config.app_secret)
+    if proof:
+        params["appsecret_proof"] = proof
+    try:
+        with httpx.Client(timeout=15) as client:
+            response = client.get(url, params=params)
+    except httpx.HTTPError:
+        return None
+    if response.status_code >= 400:
+        return None
+    try:
+        data = response.json()
+    except ValueError:
+        return None
+    graph_id = (data.get("id") or "").strip()
+    return graph_id if "_" in graph_id else None
 
 
 def _graph_post(config: FacebookConfig, path: str, data: dict) -> dict:
